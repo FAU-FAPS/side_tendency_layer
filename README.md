@@ -15,26 +15,6 @@ detected, the layer adds nothing and the rest of the costmap works as usual. The
 contains the simulation scenarios of the paper, so the results can be reproduced with the Nav2
 tutorial TurtleBot3.
 
-## How it works
-
-For every laser scan, in the frame of the scanner:
-
-1. A line fitted through all scan points gives the rough corridor direction. It splits the
-   scan points ahead of the robot, up to `perception_range`, into a left and a right set
-   (Algorithm 1 of the paper).
-2. A line is fitted into each set by least squares. The corridor is valid if both walls have
-   enough points and length, fit a line, are roughly parallel and the corridor width lies between
-   `corridor_min_width` and `corridor_max_width`.
-3. The wall with the higher confidence score (Eq. 7 of the paper) gives the corridor direction.
-   The other wall's position follows by least absolute error (Eq. 8).
-4. The parallelogram between the walls is sampled. Each sample gets the cost of the comfort
-   function of Morales et al. (Eq. 1 and 2) at its position across the corridor.
-5. The samples are written into the costmap's global frame, taking the maximum with the existing
-   costs.
-
-The layer is meant for the global costmap. The local planner follows the global path closely, so
-the side tendency acts through the global planner.
-
 ## Installation
 
 Tested with ROS 2 Humble on Ubuntu 22.04.
@@ -59,13 +39,32 @@ global_costmap:
       plugins: ["static_layer", "obstacle_layer", "inflation_layer", "side_tendency_layer"]
       side_tendency_layer:
         plugin: "side_tendency_layer/SideTendencyLayer"
+        enabled: True
         scan_topic: /scan
-        comfort_c: 0.99          # keep right; values below 0.5 keep left
+        # Corridor detection
+        perception_range: 1.5      # [m] scan points and costs this far ahead
+        corridor_min_width: 1.5    # [m] narrower corridors get no side tendency
+        corridor_max_width: 5.0    # [m] wider areas are not treated as corridor
+        min_wall_points: 5         # scan points needed on each side
+        min_wall_length: 0.2       # [m] shortest wall that counts
+        max_wall_mae: 2.5          # [m] no corridor if the MAE of both walls is larger
+        min_slope_product: -0.3    # walls are not parallel if the product of their slopes is lower
+        score_alpha: 0.5           # alpha in Eq. 7, weight of R^2 against the MAE term
+        score_lambda: 10.0         # lambda in Eq. 7, sensitivity to the MAE
+        # Comfort function (Eq. 1 and 2)
+        comfort_a: 0.1             # discomfort close to the walls
+        comfort_b: 0.4             # sensitivity to leaving the preferred position
+        comfort_c: 0.99            # preferred position, 0 = left wall, 1 = right wall
+        comfort_eta: 0.604         # normalises the maximal comfort to 1
+        # Cost representation
+        max_cost: 127              # cost of the least comfortable position
+        sample_step: 0.03          # [m] spacing of the sampled cost points
 ```
 
-The scanner may use any angle convention, from 0 to 2π or from −π to π. The scan frame must be
-connected to the costmap's global frame by TF. `config/nav2_tb3_side_tendency.yaml` is a complete
-example with every parameter.
+These are the values of the simulation config `config/nav2_tb3_side_tendency.yaml`, tuned for the
+TurtleBot3. `perception_range`, `corridor_min_width`, `corridor_max_width` and `comfort_b` differ
+from the defaults in the table below. The scanner may use any angle convention, from 0 to 2π or
+from −π to π. The scan frame must be connected to the costmap's global frame by TF.
 
 ### Parameters
 
