@@ -1,0 +1,10 @@
+# colcon
+build/
+install/
+log/
+__pycache__/
+*.pyc
+# editors
+.vscode/
+# the publisher's PDF of the paper must not be published; link the DOI instead
+Side_Tendency_Layer_*.pdf

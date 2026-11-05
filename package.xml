@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>side_tendency_layer</name>
+  <version>1.0.0</version>
+  <description>
+    Nav2 costmap layer that makes a robot keep to one side of a corridor, based on the walls
+    detected in local laser data. Implementation of Kalenberg et al., "Side Tendency Layer:
+    Enhancing Social Robot Navigation for Passenger and Pedestrian Comfort Using Local Sensor
+    Data", ECMR 2025.
+  </description>
+  <maintainer email="Matthias.Kalenberg@faps.fau.de">Matthias Kalenberg</maintainer>
+  <license>MIT</license>
+  <url type="repository">https://github.com/FAU-FAPS/side_tendency_layer</url>
+  <author>Song Li</author>
+  <author email="Matthias.Kalenberg@faps.fau.de">Matthias Kalenberg</author>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
+  <build_depend>eigen</build_depend>
+
+  <depend>geometry_msgs</depend>
+  <depend>nav2_costmap_2d</depend>
+  <depend>pluginlib</depend>
+  <depend>rclcpp</depend>
+  <depend>sensor_msgs</depend>
+  <depend>tf2</depend>
+  <depend>tf2_ros</depend>
+
+  <!-- simulation: launch files, demo_goal.py and corridor_trial.py -->
+  <exec_depend>gazebo_ros</exec_depend>
+  <exec_depend>launch</exec_depend>
+  <exec_depend>launch_ros</exec_depend>
+  <exec_depend>lifecycle_msgs</exec_depend>
+  <exec_depend>nav2_bringup</exec_depend>
+  <exec_depend>nav2_simple_commander</exec_depend>
+  <exec_depend>python3-yaml</exec_depend>
+  <exec_depend>turtlebot3_gazebo</exec_depend>
+
+  <test_depend>ament_lint_auto</test_depend>
+  <test_depend>ament_lint_common</test_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>

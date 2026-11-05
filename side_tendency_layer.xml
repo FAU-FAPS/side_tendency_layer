@@ -1,0 +1,10 @@
+<library path="side_tendency_layer_core">
+  <class name="side_tendency_layer/SideTendencyLayer"
+         type="side_tendency_layer::SideTendencyLayer"
+         base_class_type="nav2_costmap_2d::Layer">
+    <description>
+      Adds lateral costs inside corridors so that the robot keeps to one side, based on the
+      walls detected in a laser scan.
+    </description>
+  </class>
+</library>

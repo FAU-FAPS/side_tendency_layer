@@ -1,0 +1,9 @@
+# Laboratory (worlds/laboratory.world), exported from an RTAB-Map recording of the same world.
+# The map frame equals the Gazebo world frame.
+image: laboratory.pgm
+mode: trinary
+resolution: 0.0500
+origin: [-19.6368, -30.1291, 0.0]
+negate: 0
+occupied_thresh: 0.65
+free_thresh: 0.196
